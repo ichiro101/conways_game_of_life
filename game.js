@@ -8,6 +8,10 @@ function sketchProc(ps) {
   };
 }
 
-var canvas = document.getElementById("canvas1");
+// check for condition here, we don't want to paint the canvas
+// when we're unit testing
+if (document.getElementById("canvas1") != null) {
+  var canvas = document.getElementById("canvas1");
+  var processingInstance = new Processing(canvas, sketchProc);
+} 
 // attaching the sketchProc function to the canvas
-var processingInstance = new Processing(canvas, sketchProc);
