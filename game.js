@@ -1,3 +1,4 @@
+// this is where we process the backend logic
 var Board = function() {
   // store the board state in this two dimensional array
   this.boardArray = new Array();
@@ -16,8 +17,32 @@ var Board = function() {
   }
 }
 
+// this is the function responsible for everything that is displayed
+// on the canvas
 function sketchProc(ps) {
   var board = new Board();
+
+  // if mouse is clicked on one of the cells, we want to toggle its state
+  // to allow the user to set any initial state they wish
+  ps.mousePressed = function() {
+    console.log("X: " + ps.mouseX + " Y:" + ps.mouseY);
+    // calculate the logical coordinates based on the position of the mouse
+    var x = Math.floor(ps.mouseX / 10);
+    var y = Math.floor(ps.mouseY / 10);
+
+    // bound checking
+    if (x <= 80 && y <= 80 &&
+        x >= 0 && y >= 0) {
+
+      // toggle the state
+      if (board.boardArray[x][y] === 0) {
+        board.boardArray[x][y] = 1;
+      } else if (board.boardArray[x][y] === 1) {
+        board.boardArray[x][y] = 0;
+      }
+    }
+
+  }
 
   // Override draw function, by default it will be called 60 times per second
   ps.draw = function() {
@@ -45,6 +70,7 @@ function sketchProc(ps) {
 // when we're unit testing
 if (document.getElementById("canvas1") != null) {
   var canvas = document.getElementById("canvas1");
+
+  // attaching the sketchProc function to the canvas
   var processingInstance = new Processing(canvas, sketchProc);
 } 
-// attaching the sketchProc function to the canvas
