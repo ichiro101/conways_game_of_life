@@ -15,6 +15,23 @@ var Board = function() {
       this.boardArray[i][j] = 0;
     }
   }
+
+  this.numOfLiveNeighbours = function(x, y) {
+    return 0;
+  }
+
+  // go to the next state
+  this.next = function() {
+    for(i = 0; i < this.boardArray.length; i++) {
+      for(j = 0; j < this.boardArray[i].length; j++) {
+        if (this.boardArray[i][j] === 0) {
+          // this cell is dead, check if there are 3 live neighbours
+          // (Rule #4)
+
+        }
+      }
+    }
+  }
 }
 
 // this is the function responsible for everything that is displayed
