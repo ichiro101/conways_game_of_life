@@ -17,14 +17,27 @@ var Board = function() {
 }
 
 function sketchProc(ps) {
+  var board = new Board();
 
   // Override draw function, by default it will be called 60 times per second
   ps.draw = function() {
     // set up the background and size
     ps.background(224);
-    ps.size(800, 800);
+    ps.size(801, 801);
 
     // now draw the board
+    for(i = 0; i < board.boardArray.length; i++) {
+      for(j = 0; j < board.boardArray[i].length; j++) {
+        if(board.boardArray[i][j] === 0) {
+          // paint dead cell white
+          ps.fill(255);
+        } else if (board.boardArray[i][j] === 1) {
+          // paint alive cell black
+          ps.fill(0);
+        }
+        ps.rect(i*10, j*10, 10, 10);
+      }
+    }
   };
 }
 
