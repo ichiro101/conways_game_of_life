@@ -1,6 +1,10 @@
 // this is where we process the backend logic
 var Board = function() {
   // store the board state in this two dimensional array
+  //
+  // the value of the array 0 at position [x][y] means
+  // that cell is DEAD
+  // the value of 1 means the cell is ALIVE
   this.boardArray = new Array();
 
   // size of the board
@@ -16,18 +20,73 @@ var Board = function() {
     }
   }
 
+  // count the number of live neighbours cell have
+  // at position x and y
   this.numOfLiveNeighbours = function(x, y) {
-    return 0;
+    var count = 0;
+
+    for(var i = x - 1; i <= x + 1; i++) {
+      for(var j = y - 1; j <= y + 1; j++) {
+        // if the cell is exactly x, y, we don't
+        // want to count our own cell, so skip to the next
+        // case
+        if (i === x && j === y) {
+          continue;
+        }
+
+        // x coordinates out of bounds, skip
+        if (this.boardArray[i] === undefined) {
+          continue;
+        }
+        // y coordinates out of bounds, skip
+        if (this.boardArray[i][j] === undefined) {
+          continue;
+        }
+
+        if (this.boardArray[i][j] === 1) {
+          count++;
+        }
+      }
+    }
+    return count;
   }
 
   // go to the next state
   this.next = function() {
+    // we need to create this array because
+    // we have to apply the changes to the board simutaneously
+    // to do that, we have to count the neighbours BEFORE
+    // we toggle any value on the board
+    this.neighboursCountArray = new Array();
+    for(i = 0; i < this.boardArray.length; i++) {
+      this.neighboursCountArray[i] = new Array();
+      for(j = 0; j < this.boardArray[i].length; j++) {
+        this.neighboursCountArray[i][j] = this.numOfLiveNeighbours(i, j);
+      }
+    }
+
+    // now use the information we have from the count array, 
+    // do the transformation
     for(i = 0; i < this.boardArray.length; i++) {
       for(j = 0; j < this.boardArray[i].length; j++) {
         if (this.boardArray[i][j] === 0) {
           // this cell is dead, check if there are 3 live neighbours
           // (Rule #4)
+          if (this.neighboursCountArray[i][j] === 3) {
+            this.boardArray[i][j] = 1;
+          }
+        }
 
+        if (this.boardArray[i][j] === 1) {
+          // (Rule #1)
+          if (this.neighboursCountArray[i][j] < 2) {
+            this.boardArray[i][j] = 0;
+          }
+          
+          // (Rule #3)
+          if (this.neighboursCountArray[i][j] > 3) {
+            this.boardArray[i][j] = 0;
+          }
         }
       }
     }
@@ -68,8 +127,8 @@ function sketchProc(ps) {
     ps.size(801, 801);
 
     // now draw the board
-    for(i = 0; i < board.boardArray.length; i++) {
-      for(j = 0; j < board.boardArray[i].length; j++) {
+    for(var i = 0; i < board.boardArray.length; i++) {
+      for(var j = 0; j < board.boardArray[i].length; j++) {
         if(board.boardArray[i][j] === 0) {
           // paint dead cell white
           ps.fill(255);

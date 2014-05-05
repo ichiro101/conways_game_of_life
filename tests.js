@@ -25,4 +25,38 @@ test("board neighbour checking", function() {
   board.boardArray[10][9] = 1;
   board.boardArray[10][11] = 1;
   ok(board.numOfLiveNeighbours(10, 10) === 4, "#4: correct neighbour size");
+
+  board.boardArray[11][11] = 1;
+  ok(board.numOfLiveNeighbours(10, 10) === 5, "#5: correct neighbour size");
+});
+
+test("test block pattern", function() {
+  var board = new Board();
+
+  board.boardArray[1][1] = 1;
+  board.boardArray[1][2] = 1;
+  board.boardArray[2][1] = 1;
+  board.boardArray[2][2] = 1;
+
+  board.next();
+
+  ok(board.boardArray[1][1] === 1);
+  ok(board.boardArray[1][2] === 1);
+  ok(board.boardArray[2][1] === 1);
+  ok(board.boardArray[2][2] === 1);
+});
+
+test("test blinker pattern", function() {
+  var board = new Board();
+
+  board.boardArray[1][1] = 1;
+  board.boardArray[2][1] = 1;
+  board.boardArray[3][1] = 1;
+
+  board.next();
+
+  ok(board.boardArray[1][1] === 0);
+  ok(board.boardArray[2][0] === 1);
+  ok(board.boardArray[2][1] === 1);
+  ok(board.boardArray[2][2] === 1);
 });
