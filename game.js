@@ -1,3 +1,13 @@
+var started = false;
+
+var startPressed = function() {
+  started = true;
+}
+
+var stopPressed = function() {
+  started = false;
+}
+
 // this is where we process the backend logic
 var Board = function() {
   // store the board state in this two dimensional array
@@ -97,11 +107,12 @@ var Board = function() {
 // on the canvas
 function sketchProc(ps) {
   var board = new Board();
+  var currentTime = 0;
+  var lastTime = 0;
 
   // if mouse is clicked on one of the cells, we want to toggle its state
   // to allow the user to set any initial state they wish
   ps.mousePressed = function() {
-    console.log("X: " + ps.mouseX + " Y:" + ps.mouseY);
     // calculate the logical coordinates based on the position of the mouse
     var x = Math.floor(ps.mouseX / 10);
     var y = Math.floor(ps.mouseY / 10);
@@ -125,6 +136,15 @@ function sketchProc(ps) {
     // set up the background and size
     ps.background(224);
     ps.size(801, 801);
+
+    // check if we should toggle the next state
+    var currentTime = ps.millis();
+    // if enough time has passed, and we already started, then we toggle
+    // the next state
+    if (currentTime > lastTime + 500 && started) {
+      board.next();
+      lastTime = currentTime;
+    }
 
     // now draw the board
     for(var i = 0; i < board.boardArray.length; i++) {
